@@ -52,6 +52,21 @@
         .delete-form {
             margin: 0;
         }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .edit-link {
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: inherit;
+        }
     </style>
 </head>
 <body>
@@ -91,10 +106,13 @@
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td>
-                    <form method="POST" action="{% url 'delete_user' user.id %}" class="delete-form">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-btn" onclick="return confirm('Delete this user?');">Delete</button>
-                    </form>
+                    <div class="actions">
+                        <a href="{% url 'edit_user' user.id %}" class="edit-link">Edit</a>
+                        <form method="POST" action="{% url 'delete_user' user.id %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn" onclick="return confirm('Delete this user?');">Delete</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% empty %}
