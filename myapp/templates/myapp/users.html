@@ -1,21 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
+    <title>Users List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        th {
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        /* Form Styles */
+        .form-box {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .delete-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .delete-form {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Users</h1>
 
-    {% if users %}
-        <ul>
+    <h2>add users</h2>
+
+    <div class="form-box">
+        <form method="POST" action="/users/">
+            {% csrf_token %}
+            <label>Username:</label>
+            <input type="text" name="name" placeholder="Username " required>
+
+            <label>Email:</label>
+            <input type="email" name="email" placeholder="Email  " required>
+
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Password likho" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <h1>  Users List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for user in users %}
-                <li>{{ user.name }} - {{ user.email }}</li>
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <form method="POST" action="{% url 'delete_user' user.id %}" class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" onclick="return confirm('Delete this user?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No users found.</td>
+            </tr>
             {% endfor %}
-        </ul>
-    {% else %}
-        <p>No users found.</p>
-    {% endif %}
+        </tbody>
+    </table>
+
 </body>
 </html>
